@@ -1,7 +1,8 @@
 // src/components/Navbar.jsx
 import { Link, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Navbar = () => {
+const Navbar = ({ isCollapsed }) => {
   const location = useLocation();
   
   const isActiveRoute = (path) => {
@@ -15,7 +16,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className={`flex items-center ${isCollapsed ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
               <svg 
                 className="h-8 w-8 text-white"
                 fill="none"
@@ -53,6 +54,10 @@ const Navbar = () => {
       </div>
     </nav>
   );
+};
+
+Navbar.propTypes = {
+  isCollapsed: PropTypes.bool.isRequired,
 };
 
 export default Navbar;

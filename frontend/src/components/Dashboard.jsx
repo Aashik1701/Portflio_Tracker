@@ -57,29 +57,29 @@ const Dashboard = () => {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4">
       {/* Portfolio Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <h3 className="text-gray-500 text-sm font-medium">Total Portfolio Value</h3>
-          <p className="text-2xl font-bold text-gray-900">${totalValue.toFixed(2)}</p>
-          <p className="text-sm text-gray-600">
+          <p className="text-xl md:text-2xl font-bold text-gray-900">${totalValue.toFixed(2)}</p>
+          <p className="text-xs md:text-sm text-gray-600">
             Investment: ${totalInvestment.toFixed(2)}
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <h3 className="text-gray-500 text-sm font-medium">Number of Stocks</h3>
-          <p className="text-2xl font-bold text-gray-900">{stocks.length}</p>
-          <p className="text-sm text-gray-600">Active Positions</p>
+          <p className="text-xl md:text-2xl font-bold text-gray-900">{stocks.length}</p>
+          <p className="text-xs md:text-sm text-gray-600">Active Positions</p>
         </div>
         
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
           <h3 className="text-gray-500 text-sm font-medium">Top Performer</h3>
           {topPerformer && (
             <>
-              <p className="text-2xl font-bold text-gray-900">{topPerformer.symbol}</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-xl md:text-2xl font-bold text-gray-900">{topPerformer.symbol}</p>
+              <p className="text-xs md:text-sm text-gray-600">
                 Gain: {((topPerformer.currentPrice - topPerformer.buyPrice) / 
                 topPerformer.buyPrice * 100).toFixed(2)}%
               </p>
@@ -90,33 +90,33 @@ const Dashboard = () => {
 
       {/* Charts */}
       {stocks.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4">Portfolio Distribution</h3>
-            <div className="h-80">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <div className="bg-white rounded-lg shadow p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold mb-4">Portfolio Distribution</h3>
+            <div className="h-60 md:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="symbol" />
-                  <YAxis />
+                  <XAxis dataKey="symbol" tick={{fontSize: 12}} />
+                  <YAxis tick={{fontSize: 12}} />
                   <Tooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{fontSize: '12px'}} />
                   <Bar dataKey="currentValue" fill="#3B82F6" name="Current Value" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4">Price Comparison</h3>
-            <div className="h-80">
+          <div className="bg-white rounded-lg shadow p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-semibold mb-4">Price Comparison</h3>
+            <div className="h-60 md:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="symbol" />
-                  <YAxis />
+                  <XAxis dataKey="symbol" tick={{fontSize: 12}} />
+                  <YAxis tick={{fontSize: 12}} />
                   <Tooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{fontSize: '12px'}} />
                   <Line 
                     type="monotone" 
                     dataKey="currentPrice" 
