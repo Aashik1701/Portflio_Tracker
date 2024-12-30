@@ -43,7 +43,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
         <span className={`ml-2 font-bold text-xl transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>
-          Portfolio
+          Portfolio Tracker
         </span>
       </div>
 
