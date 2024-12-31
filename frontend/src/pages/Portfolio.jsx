@@ -6,12 +6,12 @@ const Portfolio = () => {
     const [stock, setStock] = useState(null);
     const [portfolio, setPortfolio] = useState({});
     const [searchSymbol, setSearchSymbol] = useState('');
-    const [allStocks, setAllStocks] = useState([]); // To hold all available stocks
+    //const [allStocks, setAllStocks] = useState([]); // To hold all available stocks
 
     // Function to fetch stock data
     const fetchStockData = async (symbol) => {
-        const apiKey = 'DS96KDC5Z0M7XNU3'; // Replace with your API key
-        const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
+        // const apiKey = 'BE9MTBCMGZGKYPSB'; // Replace with your API key
+        const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo`;
 
         try {
             const response = await axios.get(apiUrl);
@@ -76,16 +76,16 @@ const Portfolio = () => {
     };
 
     // Fetch all available stocks (this is a placeholder, replace with your logic)
-    useEffect(() => {
-        const fetchAllStocks = async () => {
-            // Replace with your logic to fetch all available stocks
-            const availableStocks = ['AAPL']; // Example stock symbols
-            const stockData = await Promise.all(availableStocks.map(symbol => fetchStockData(symbol)));
-            setAllStocks(stockData);
-        };
+    // useEffect(() => {
+    //     const fetchAllStocks = async () => {
+    //         // Replace with your logic to fetch all available stocks
+    //         const availableStocks = ['AAPL']; // Example stock symbols
+    //         const stockData = await Promise.all(availableStocks.map(symbol => fetchStockData(symbol)));
+    //         setAllStocks(stockData);
+    //     };
 
-        fetchAllStocks();
-    }, []);
+    //     fetchAllStocks();
+    // }, []);
 
     return (
         <div className="space-y-6 p-4">
@@ -177,7 +177,7 @@ const Portfolio = () => {
                     )}
                 </div>
 
-                <div className="bg-white rounded-lg shadow p-6">
+                {/* <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Available Stocks</h2>
                     <div className="divide-y divide-gray-200">
                         {allStocks.map((stock) => (
@@ -189,7 +189,7 @@ const Portfolio = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );
