@@ -6,34 +6,45 @@ const Portfolio = () => {
     const [stock, setStock] = useState(null);
     const [portfolio, setPortfolio] = useState({});
     const [searchSymbol, setSearchSymbol] = useState('');
-    //const [allStocks, setAllStocks] = useState([]); // To hold all available stocks
+    const [allStocks, setAllStocks] = useState([]); // To hold all available stocks
 
     // Function to fetch stock data
     const fetchStockData = async (symbol) => {
-        // const apiKey = 'BE9MTBCMGZGKYPSB'; // Replace with your API key
-        const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo`;
+        const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`;
 
         try {
             const response = await axios.get(apiUrl);
-            console.log(response.data); // Log the full response
             const data = response.data['Global Quote'];
             if (data) {
-                setStock({
+                return {
                     symbol: data['01. symbol'],
                     price: parseFloat(data['05. price']),
                     high: parseFloat(data['03. high']),
-                    low: parseFloat(data['04. low'])
-                });
+                    low: parseFloat(data['04. low']),
+                };
             } else {
-                setStock(null);
                 alert('Stock data not found.');
+                return null;
             }
         } catch (error) {
             console.error('Error fetching stock data:', error);
-            setStock(null);
             alert('Failed to fetch stock data. Please try again.');
+            return null;
         }
     };
+
+    // Function to fetch all available stocks
+    const fetchAllStocks = async () => {
+        const availableStocks = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA']; // Example stock symbols
+        const stockDataPromises = availableStocks.map(symbol => fetchStockData(symbol));
+        const stockData = await Promise.all(stockDataPromises);
+        setAllStocks(stockData.filter(stock => stock !== null)); // Filter out any null responses
+    };
+
+    // Fetch all available stocks on component mount
+    useEffect(() => {
+        fetchAllStocks();
+    }, []);
 
     // Function to buy stock
     const buyStock = () => {
@@ -56,7 +67,7 @@ const Portfolio = () => {
     // Function to sell stock
     const sellStock = () => {
         if (stock && stock.symbol && portfolio[stock.symbol]) {
-            setPortfolio(( prevPortfolio) => {
+            setPortfolio((prevPortfolio) => {
                 const newPortfolio = { ...prevPortfolio };
                 if (newPortfolio[stock.symbol].shares > 1) {
                     newPortfolio[stock.symbol].shares -= 1;
@@ -71,21 +82,13 @@ const Portfolio = () => {
     // Function to handle stock search
     const handleSearch = () => {
         if (searchSymbol.trim() !== '') {
-            fetchStockData(searchSymbol.trim().toUpperCase());
+            fetchStockData(searchSymbol.trim().toUpperCase()).then(data => {
+                if (data) {
+                    setStock(data);
+                }
+            });
         }
     };
-
-    // Fetch all available stocks (this is a placeholder, replace with your logic)
-    // useEffect(() => {
-    //     const fetchAllStocks = async () => {
-    //         // Replace with your logic to fetch all available stocks
-    //         const availableStocks = ['AAPL']; // Example stock symbols
-    //         const stockData = await Promise.all(availableStocks.map(symbol => fetchStockData(symbol)));
-    //         setAllStocks(stockData);
-    //     };
-
-    //     fetchAllStocks();
-    // }, []);
 
     return (
         <div className="space-y-6 p-4">
@@ -104,7 +107,7 @@ const Portfolio = () => {
                     />
                     <button 
                         onClick={handleSearch}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        className ="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                     >
                         Search
                     </button>
@@ -161,7 +164,7 @@ const Portfolio = () => {
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Your Portfolio</h2>
                     {Object.keys(portfolio).length > 0 ? (
                         <div className="divide-y divide-gray-200">
-                            {Object.entries(portfolio ).map(([symbol, data]) => (
+                            {Object.entries(portfolio).map(([symbol, data]) => (
                                 <div key={symbol} className="py-3">
                                     <div className="flex justify-between items-center">
                                         <span className="font-medium">{symbol}</span>
@@ -176,8 +179,9 @@ const Portfolio = () => {
                         <p className="text-gray-500 text-center py-4">No stocks in your portfolio</p>
                     )}
                 </div>
-
-                {/* <div className="bg-white rounded-lg shadow p-6">
+                
+                {/* Available Stocks */}
+                <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Available Stocks</h2>
                     <div className="divide-y divide-gray-200">
                         {allStocks.map((stock) => (
@@ -189,7 +193,7 @@ const Portfolio = () => {
                             </div>
                         ))}
                     </div>
-                </div> */}
+                </div>
             </div>
         </div>
     );
