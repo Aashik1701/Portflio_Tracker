@@ -4,8 +4,8 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [profile, setProfile] = useState({
     personal: {
-      name: 'John Doe',
-      email: 'john@example.com',
+      name: 'Aashik',
+      email: 'md17ashik@gmail.com',
       phone: '+1 (555) 123-4567',
       currency: 'USD'
     },
