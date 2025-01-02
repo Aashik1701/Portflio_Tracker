@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import { PortfolioProvider } from './context/PortfolioContext';
 import Navbar from './components/Navbar';
 import Portfolio from './pages/Portfolio';
+import Settings from './pages/Settings';
 const App = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -23,6 +24,7 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/portfolio" element={<Portfolio />} />
+                <Route path="/settings" element={<Settings />} />
                 {/* Add more routes as needed */}
               </Routes>
             </div>
