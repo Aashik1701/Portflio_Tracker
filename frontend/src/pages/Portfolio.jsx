@@ -11,7 +11,7 @@ const Portfolio = () => {
 
     // Function to fetch stock data
     const fetchStockData = async (symbol) => {
-        const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`;
+        const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=A8BHNBIMQDA7ATPF`;
 
         try {
             const response = await axios.get(apiUrl);
