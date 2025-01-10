@@ -18,12 +18,14 @@ const App = () => {
           <Sidebar isCollapsed={isSidebarCollapsed} setIsCollapsed={setIsSidebarCollapsed} />
           <main className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'} min-h-screen`}>
             <Navbar isCollapsed={isSidebarCollapsed} />
+            {/* Main content */}
             <div className="p-6">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/settings" element={<Settings />} />
+                {/* Add more routes as needed */}
               </Routes>
             </div>
           </main>
