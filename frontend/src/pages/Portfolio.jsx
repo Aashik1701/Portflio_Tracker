@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// src/components/Portfolio.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -22,7 +24,7 @@ const Portfolio = () => {
                     low: parseFloat(data['04. low']),
                 };
             } else {
-                console.error('Stock data not found.');
+                alert('Stock data not found.');
                 return null;
             }
         } catch (error) {
@@ -42,33 +44,8 @@ const Portfolio = () => {
 
     // Fetch all available stocks on component mount
     useEffect(() => {
-        const storedStocks = localStorage.getItem('availableStocks');
-        if (storedStocks) {
-            setAllStocks(JSON.parse(storedStocks)); // Load stocks from localStorage
-        } else {
-            fetchAllStocks(); // Fetch if no stored data
-        }
-
-        // Load portfolio from localStorage
-        const storedPortfolio = localStorage.getItem('portfolio');
-        if (storedPortfolio) {
-            setPortfolio(JSON.parse(storedPortfolio));
-        }
-    }, [fetchAllStocks]);
-
-    // Save allStocks to localStorage whenever it changes
-    useEffect(() => {
-        if (allStocks.length > 0) {
-            localStorage.setItem('availableStocks', JSON.stringify(allStocks));
-        }
-    }, [allStocks]);
-
-    // Save portfolio to localStorage whenever it changes
-    useEffect(() => {
-        if (Object.keys(portfolio).length > 0) {
-            localStorage.setItem('portfolio', JSON.stringify(portfolio));
-        }
-    }, [portfolio]);
+        fetchAllStocks();
+    }, []);
 
     // Function to buy stock
     const buyStock = () => {
@@ -164,57 +141,57 @@ const Portfolio = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-4 mt-4">
-                    <button 
-                        onClick={async () => {
-                            try {
-                                await buyStock();
-                                // Show success feedback
-                                const successMessage = document.createElement('div');
-                                successMessage.textContent = `Bought 1 share of ${stock.symbol}`;
-                                successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow';
-                                document.body.appendChild(successMessage);
-                                setTimeout(() => successMessage.remove(), 2000);
-                            } catch (error) {
-                                console.error('Error buying stock:', error);
-                            }
-                        }} 
-                        disabled={!stock}
-                        className="flex-1 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 
-                                 transition-colors disabled:opacity-50 active:scale-95 transform"
-                    >
-                        <span className="flex items-center justify-center gap-2">
-                            Buy Stock
-                            {stock && <span className="text-sm">({stock.symbol})</span>}
-                        </span>
-                    </button>
-                    <button 
-                        onClick={async () => {
-                            try {
-                                await sellStock();
-                                // Show success feedback
-                                const successMessage = document.createElement('div');
-                                successMessage.textContent = `Sold 1 share of ${stock.symbol}`;
-                                successMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow';
-                                document.body.appendChild(successMessage);
-                                setTimeout(() => successMessage.remove(), 2000);
-                            } catch (error) {
-                                console.error('Error selling stock:', error);
-                            }
-                        }} 
-                        disabled={!stock || !portfolio[stock?.symbol]}
-                        className="flex-1 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 
-                                 transition-colors disabled:opacity-50 active:scale-95 transform"
-                    >
-                        <span className="flex items-center justify-center gap-2">
-                            Sell Stock
-                            {stock && <span className="text-sm">({stock.symbol})</span>}
-                        </span>
-                    </button>
-                </div>
-            </div>
+                                <div className="flex gap-4 mt-4">
+                                    <button 
+                                        onClick={async () => {
+                                            try {
+                                                await buyStock();
+                                                // Show success feedback
+                                                const successMessage = document.createElement('div');
+                                                successMessage.textContent = `Bought 1 share of ${stock.symbol}`;
+                                                successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow';
+                                                document.body.appendChild(successMessage);
+                                                setTimeout(() => successMessage.remove(), 2000);
+                                            } catch (error) {
+                                                console.error('Error buying stock:', error);
+                                            }
+                                        }} 
+                                        disabled={!stock}
+                                        className="flex-1 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 
+                                                 transition-colors disabled:opacity-50 active:scale-95 transform"
+                                    >
+                                        <span className="flex items-center justify-center gap-2">
+                                            Buy Stock
+                                            {stock && <span className="text-sm">({stock.symbol})</span>}
+                                        </span>
+                                    </button>
+                                    <button 
+                                        onClick={async () => {
+                                            try {
+                                                await sellStock();
+                                                // Show success feedback
+                                                const successMessage = document.createElement('div');
+                                                successMessage.textContent = `Sold 1 share of ${stock.symbol}`;
+                                                successMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow';
+                                                document.body.appendChild(successMessage);
+                                                setTimeout(() => successMessage.remove(), 2000);
+                                            } catch (error) {
+                                                console.error('Error selling stock:', error);
+                                            }
+                                        }} 
+                                        disabled={!stock || !portfolio[stock?.symbol]}
+                                        className="flex-1 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 
+                                                 transition-colors disabled:opacity-50 active:scale-95 transform"
+                                    >
+                                        <span className="flex items-center justify-center gap-2">
+                                            Sell Stock
+                                            {stock && <span className="text-sm">({stock.symbol})</span>}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
 
-            {/* Portfolio Section */}
+                            {/* Portfolio Section */}
             <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Your Portfolio</h2>
