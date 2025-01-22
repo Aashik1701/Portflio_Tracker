@@ -1,9 +1,27 @@
-//Dashboard.jsx
-import { usePortfolio } from '../context/PortfolioContext';
+import { useEffect, useState } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
-  const { stocks, loading, error } = usePortfolio();
+  const [stocks, setStocks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error] = useState(null);
+
+  // Fetch stocks from local storage
+  useEffect(() => {
+    const storedPortfolio = localStorage.getItem('portfolio');
+    if (storedPortfolio) {
+      const portfolio = JSON.parse(storedPortfolio);
+      // Convert portfolio object to an array of stocks
+      const stocksArray = Object.entries(portfolio).map(([symbol, data]) => ({
+        symbol,
+        quantity: data.shares,
+        buyPrice: data.price,
+        currentPrice: data.price // Assuming current price is the same as buy price for demo
+      }));
+      setStocks(stocksArray);
+    }
+    setLoading(false);
+  }, []);
 
   // Calculate portfolio metrics
   const calculateMetrics = () => {
@@ -59,63 +77,65 @@ const Dashboard = () => {
   return (
     <div className="space-y-6 p-4">
       {/* Portfolio Summary Cards */}
-        <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <div className="bg-white rounded-lg shadow p-4 md:p-6">
-            <h3 className="text-gray-500 text-sm font-medium">Total Portfolio Value</h3>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">${totalValue.toFixed(2)}</p>
-            <p className="text-xs md:text-sm text-gray-600">
-          Investment: ${totalInvestment.toFixed(2)}
-            </p>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow p-4 md:p-6">
-            <h3 className="text-gray-500 text-sm font-medium">Number of Stocks</h3>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">{stocks.length}</p>
-            <p className="text-xs md:text-sm text-gray-600">Active Positions</p>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow p-4 md:p-6">
-            <h3 className="text-gray-500 text-sm font-medium">Top Performer</h3>
-            {topPerformer && (
-          <>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">{topPerformer.symbol}</p>
-            <p className="text-xs md:text-sm text-green-600">
-              Gain: {((topPerformer.currentPrice - topPerformer.buyPrice) / 
-              topPerformer.buyPrice * 100).toFixed(2)}%
-            </p>
-          </>
-            )}
-          </div>
-          <div className="bg-white rounded-lg shadow p-4 md:p-6">
-            <h3 className="text-gray-500 text-sm font-medium">In Risk</h3>
-            {stocks.length > 0 && (
-          <>
-            <p className="text-xl md:text-2xl font-bold text-gray-900">
-              {[...stocks].sort((a, b) => 
-            ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
-            ((b.currentPrice - b.buyPrice) / b.buyPrice)
-              )[0].symbol}
-            </p>
-            <p className="text-xs md:text-sm text-red-600">
-              Loss: {(([...stocks].sort((a, b) => 
-            ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
-            ((b.currentPrice - b.buyPrice) / b.buyPrice)
-              )[0].currentPrice - 
-              [...stocks].sort((a, b) => 
-            ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
-            ((b.currentPrice - b.buyPrice) / b.buyPrice)
-              )[0].buyPrice) / 
-              [...stocks].sort((a, b) => 
-            ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
-            ((b.currentPrice - b.buyPrice) / b.buyPrice)
-              )[0].buyPrice * 100).toFixed(2)}%
-            </p>
-          </>
-            )}
-          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
+          <h3 className="text-gray-500 text-sm font-medium">Total Portfolio Value</h3>
+          <p className="text-xl md:text-2xl font-bold text-gray-900">${totalValue.toFixed(2)}</p>
+          <p className="text-xs md:text-sm text-gray-600">
+            Investment: ${totalInvestment.toFixed(2)}
+          </p>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
+          <h3 className="text-gray-500 text-sm font-medium">Number of Stocks</h3>
+          <p className="text-xl md:text-2xl font-bold text-gray-900">{stocks.length}</p>
+          <p className="text-xs md:text-sm text-gray-600">Active Positions</p>
+        </div>
+        {/* Top Performer */}
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
+          <h3 className="text-gray-500 text-sm font-medium">Top Performer</h3>
+          {topPerformer && (
+            <>
+              <p className="text-xl md:text-2xl font-bold text-gray-900">{topPerformer.symbol}</p>
+              <p className="text-xs md:text-sm text-green-600">
+                Gain: {((topPerformer.currentPrice - topPerformer.buyPrice) / 
+                topPerformer.buyPrice * 100 ).toFixed(2)}%
+              </p>
+            </>
+          )}
         </div>
 
-        {/* Charts */}
+        {/* In Risk */}
+        <div className="bg-white rounded-lg shadow p-4 md:p-6">
+          <h3 className="text-gray-500 text-sm font-medium">In Risk</h3>
+          {stocks.length > 0 && (
+            <>
+              <p className="text-xl md:text-2xl font-bold text-gray-900">
+                {[...stocks].sort((a, b) => 
+                  ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
+                  ((b.currentPrice - b.buyPrice) / b.buyPrice)
+                )[0].symbol}
+              </p>
+              <p className="text-xs md:text-sm text-red-600">
+                Loss: {(([...stocks].sort((a, b) => 
+                  ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
+                  ((b.currentPrice - b.buyPrice) / b.buyPrice)
+                )[0].currentPrice - 
+                [...stocks].sort((a, b) => 
+                  ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
+                  ((b.currentPrice - b.buyPrice) / b.buyPrice)
+                )[0].buyPrice) / 
+                [...stocks].sort((a, b) => 
+                  ((a.currentPrice - a.buyPrice) / a.buyPrice) - 
+                  ((b.currentPrice - b.buyPrice) / b.buyPrice)
+                )[0].buyPrice * 100).toFixed(2)}%
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Charts */}
       {stocks.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           <div className="bg-white rounded-lg shadow p-4 md:p-6">
